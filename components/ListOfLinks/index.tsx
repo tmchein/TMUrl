@@ -1,10 +1,11 @@
 import { useState, useContext, useEffect } from "react";
 import UserContext from "../../context/UserContext";
+import LinkContext from "../../context/LinkContext";
 import Link from "../Link";
 
 export default function ListOfLinks() {
   const { user }: any = useContext(UserContext);
-  const [listOfLinks, setListOfLinks] = useState<any>([]);
+  const { listOfLinks, setListOfLinks }: any = useContext(LinkContext);
   //Revisar la lista de links de la base de datos y renderizarla cada vez que se renderiza el componente y se actualizan los links
 
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function ListOfLinks() {
         .then((response) => setListOfLinks(response));
     };
     fetchData();
-  }, [user]);
+  }, [user, setListOfLinks]);
 
   if (!user) {
     return (
