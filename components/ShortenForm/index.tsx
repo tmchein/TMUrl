@@ -35,7 +35,7 @@ export default function ShortenForm() {
       body: JSON.stringify({ url, user }),
     });
     const response = await data.json();
-    setShortUrl(response.shortenedUrl);
+    setShortUrl(response.short);
 
     if (user) {
       await fetch("/api/getUserLinks", {
@@ -48,8 +48,7 @@ export default function ShortenForm() {
         .then((response) => response.json())
         .then((response) => setListOfLinks(response));
     }
-
-    await copyTextToClipboard(`${window.location.host}/${shortUrl}`);
+    await copyTextToClipboard(`${window.location.host}/${response.short}`);
     setAlert({
       show: true,
       type: "success",
