@@ -49,7 +49,7 @@ export default function ShortenForm() {
         .then((response) => setListOfLinks(response));
     }
 
-    copyTextToClipboard(`${window.location.host}/${shortUrl}`);
+    await copyTextToClipboard(`${window.location.host}/${shortUrl}`);
     setAlert({
       show: true,
       type: "success",
