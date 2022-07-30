@@ -1,12 +1,15 @@
 import { useContext, useState } from "react";
 import UserContext from "../../context/UserContext";
 import LinkContext from "../../context/LinkContext";
+import { useAlert } from "../../context/AlertContext";
+import { copyTextToClipboard } from "../../utils/clipboard";
 
 export default function ShortenForm() {
   const [url, setUrl] = useState<string>("");
   const [shortUrl, setShortUrl] = useState<string>("");
   const { user }: any = useContext(UserContext);
   const { setListOfLinks }: any = useContext(LinkContext);
+  const { setAlert }: any = useAlert();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setUrl(e.target.value);
@@ -15,7 +18,14 @@ export default function ShortenForm() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (!url || url.length === 0 || url === " ") return;
+    if (!url || url.length === 0 || url === " ") {
+      setAlert({
+        show: true,
+        type: "error",
+        message: "Please enter a valid url",
+      });
+      return;
+    }
 
     const data = await fetch("/api/shortenUrl", {
       method: "POST",
@@ -27,15 +37,24 @@ export default function ShortenForm() {
     const response = await data.json();
     setShortUrl(response.shortenedUrl);
 
-    await fetch("/api/getUserLinks", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: user.email }),
-    })
-      .then((response) => response.json())
-      .then((response) => setListOfLinks(response));
+    if (user) {
+      await fetch("/api/getUserLinks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: user.email }),
+      })
+        .then((response) => response.json())
+        .then((response) => setListOfLinks(response));
+    }
+
+    copyTextToClipboard(`${window.location.host}/${response.shortenedUrl}`);
+    setAlert({
+      show: true,
+      type: "success",
+      message: "Your link has been shortened!",
+    });
   }
 
   return (

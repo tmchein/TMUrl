@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import UserContext from "../../context/UserContext";
 import LinkContext from "../../context/LinkContext";
 import Link from "../Link";
@@ -6,7 +6,6 @@ import Link from "../Link";
 export default function ListOfLinks() {
   const { user }: any = useContext(UserContext);
   const { listOfLinks, setListOfLinks }: any = useContext(LinkContext);
-  //Revisar la lista de links de la base de datos y renderizarla cada vez que se renderiza el componente y se actualizan los links
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,9 +31,11 @@ export default function ListOfLinks() {
         className="h-full w-full flex items-center justify-center flex-col gap-8
       text-gray-400"
       >
-        <h1 className="text-8xl font-extrabold animate-bounce">¯\_(ツ)_/¯</h1>
-        <h2 className="text-lg font-semibold underline">
-          You are not logged in, sign in to save your shortened urls 🩳
+        <h1 className="text-6xl sm:text-8xl font-extrabold animate-bounce">
+          ¯\_(ツ)_/¯
+        </h1>
+        <h2 className="text-lg font-semibold underline text-center">
+          You are not logged in, sign in to save your shortened urls
         </h2>
       </div>
     );
@@ -46,9 +47,11 @@ export default function ListOfLinks() {
         className="h-full w-full flex items-center justify-center flex-col gap-8
       text-gray-400"
       >
-        <h1 className="text-8xl font-extrabold animate-bounce">¯\_(ツ)_/¯</h1>
-        <h2 className="text-lg font-semibold underline">
-          Your list of links is empty, start shortening! 🩳
+        <h1 className="text-6xl sm:text-8xl font-extrabold animate-bounce">
+          ¯\_(ツ)_/¯
+        </h1>
+        <h2 className="text-lg font-semibold underline text-center">
+          Your list of links is empty, start shortening!
         </h2>
       </div>
     );

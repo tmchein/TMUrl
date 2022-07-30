@@ -9,7 +9,7 @@ export default function Header() {
       from-[#485563] to-[#29323c] bg-clip-text text-transparent
       lg:text-4xl"
       >
-        TMUrl 🩳
+        TMUrl
       </h1>
       <ShortenForm />
       <LogginButton />
