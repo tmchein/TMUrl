@@ -52,7 +52,7 @@ export default function ShortenForm() {
     setAlert({
       show: true,
       type: "success",
-      message: "Your link has been shortened!",
+      message: "Link copied to clipboard 📋",
     });
   }
 
