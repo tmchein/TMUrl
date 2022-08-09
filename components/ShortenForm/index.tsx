@@ -27,15 +27,23 @@ export default function ShortenForm() {
       return;
     }
 
-    const data = await fetch("/api/shortenUrl", {
+    await fetch("/api/shortenUrl", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ url, user }),
-    });
-    const response = await data.json();
-    setShortUrl(response.short);
+    })
+      .then((response) => response.json())
+      .then(async (response) => {
+        setShortUrl(response.shortUrl);
+        await copyTextToClipboard(`${window.location.host}/${response.short}`);
+        setAlert({
+          show: true,
+          type: "success",
+          message: "Link copied to clipboard 📋",
+        });
+      });
 
     if (user) {
       await fetch("/api/getUserLinks", {
@@ -48,12 +56,6 @@ export default function ShortenForm() {
         .then((response) => response.json())
         .then((response) => setListOfLinks(response));
     }
-    await copyTextToClipboard(`${window.location.host}/${response.short}`);
-    setAlert({
-      show: true,
-      type: "success",
-      message: "Link copied to clipboard 📋",
-    });
   }
 
   return (
