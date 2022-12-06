@@ -18,6 +18,14 @@ export default function ShortenForm() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    if (!user) {
+      setAlert({
+        show: true,
+        type: "error",
+        message: "Please login to shorten links",
+      });
+      return;
+    }
     if (!url || url.length === 0 || url === " ") {
       setAlert({
         show: true,
@@ -76,7 +84,7 @@ export default function ShortenForm() {
         type="submit"
         value="Shorten!"
         className="bg-sky-400 h-10 px-2 text-white font-bold uppercase hover:bg-sky-600
-           text-sm sm:text-lg rounded-lg"
+        text-sm sm:text-lg rounded-lg"
       />
     </form>
   );

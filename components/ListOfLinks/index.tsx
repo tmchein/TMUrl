@@ -2,9 +2,11 @@ import { useContext, useEffect } from "react";
 import UserContext from "../../context/UserContext";
 import LinkContext from "../../context/LinkContext";
 import Link from "../Link";
+import { useSession } from "next-auth/react";
 
 export default function ListOfLinks() {
-  const { user }: any = useContext(UserContext);
+  const { data } = useSession();
+  const { user } = data || {};
   const { listOfLinks, setListOfLinks }: any = useContext(LinkContext);
 
   useEffect(() => {

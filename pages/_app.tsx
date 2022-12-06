@@ -3,17 +3,20 @@ import type { AppProps } from "next/app";
 import { UserContextProvider } from "../context/UserContext";
 import { LinkContextProvider } from "../context/LinkContext";
 import { AlertContextProvider } from "../context/AlertContext";
+import { SessionProvider } from "next-auth/react";
 
-function MyApp({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <UserContextProvider>
       <AlertContextProvider>
         <LinkContextProvider>
-          <Component {...pageProps} />
+          <SessionProvider session={session}>
+            <Component {...pageProps} />
+          </SessionProvider>
         </LinkContextProvider>
       </AlertContextProvider>
     </UserContextProvider>
   );
 }
 
-export default MyApp;
+export default App;

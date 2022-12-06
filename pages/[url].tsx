@@ -6,13 +6,12 @@ export default function ShortIdPage() {
 
 export async function getServerSideProps({ params }: any) {
   const { url } = params;
-
   const data = await db.link.findFirst({
     where: { short: url },
   });
 
   if (!data) {
-    return { redirect: { desination: "/" } };
+    return { redirect: { destination: "/" } };
   }
 
   return {

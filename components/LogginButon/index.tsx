@@ -1,77 +1,58 @@
 import UserContext from "../../context/UserContext";
-import { useEffect, useContext } from "react";
-import { supabase } from "../../utils/supabase";
+import { useContext, useEffect } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
-type ExtractedUserInfo = {
-  avatar: string;
-  name: string;
-  email: string;
-};
-
-function extractUserInfo(rawUser: any): ExtractedUserInfo | null {
-  const userData = rawUser?.identities?.[0]?.identity_data;
-  if (!userData) {
-    return null;
-  }
-  const { name, email, avatar_url: avatar } = userData;
-
-  return { avatar, name, email };
-}
-
-type User = {
-  [key: string]: any;
-};
-
-export default function LogginButton() {
-  const { user, setUser }: User = useContext(UserContext);
+export default function LoginButton() {
+  const { data, status } = useSession();
+  const { user } = data || {};
+  const { setUser }: any = useContext(UserContext);
 
   useEffect(() => {
-    const rawUser = supabase.auth.user();
-    const newUser = extractUserInfo(rawUser);
-    setUser(newUser);
+    setUser(user);
+  }, [user, setUser]);
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        const newUser = extractUserInfo(session?.user);
-        setUser(newUser);
-      }
-    );
+  async function handleLogin() {
+    try {
+      await signIn("google", { callbackUrl: "/" });
+    } catch (error) {
+      console.log("Ostras, un error", error);
+    }
+  }
 
-    return () => listener?.unsubscribe();
-  }, [setUser]);
+  async function handleSignOut() {
+    try {
+      await signOut({ callbackUrl: "/" });
+    } catch (error) {
+      console.log("Ostras, un error", error);
+    }
+  }
 
-  const login = async () => {
-    const { error } = await supabase.auth.signIn(
-      {
-        provider: "google",
-      },
-      {
-        scopes: "profile",
-      }
-    );
-
-    if (error) console.log(error);
-  };
-
-  const logout = async () => {
-    const { error } = await supabase.auth.signOut();
-  };
-
-  if (user === undefined) return <div />;
-  if (user !== null) {
+  if (user === undefined && status === "loading")
     return (
       <button
+        className={`bg-gray-50 hover:bg-gray-200 text-gray-900 font-bold py-1 px-4
+          transition-colors duration-300 rounded-lg flex gap-2`}
+      >
+        <span>Loading</span>
+      </button>
+    );
+
+  if (user != null) {
+    return (
+      <button
+        onClick={handleSignOut}
         className="text-gray-800 font-bold flex p-2 rounded-xl bg-gray-200 gap-2"
-        onClick={logout}
       >
         <picture>
           <img
             className="w-6 h-6 rounded-full"
-            src={user.avatar}
-            alt={user.name}
+            src={user?.image || undefined}
+            alt={`${user.name} profile picture`}
           />
         </picture>
-        <span className="hidden sm:block">{user.name}</span>
+        <span className="hidden sm:block">
+          {user?.name?.split(" ").splice(0, 2).join(" ")}
+        </span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-6 w-6"
@@ -92,9 +73,9 @@ export default function LogginButton() {
 
   return (
     <button
+      onClick={handleLogin}
       className="text-gray-600 font-bold flex p-2 rounded-xl bg-gray-200
-       hover:text-gray-900 hover:bg-gray-300 gap-1"
-      onClick={login}
+    hover:text-gray-900 hover:bg-gray-300 gap-1"
     >
       <svg
         className="w-6 h-6"
