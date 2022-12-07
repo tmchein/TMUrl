@@ -45,7 +45,7 @@ export default function LoginButton() {
       >
         <picture>
           <img
-            className="w-6 h-6 rounded-full"
+            className="w-[24px] h-[24px] rounded-full"
             src={user?.image || undefined}
             alt={`${user.name} profile picture`}
           />
