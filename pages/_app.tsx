@@ -4,13 +4,13 @@ import { UserContextProvider } from "../context/UserContext";
 import { LinkContextProvider } from "../context/LinkContext";
 import { AlertContextProvider } from "../context/AlertContext";
 import { SessionProvider } from "next-auth/react";
-import { DefaultSeo } from "next-seo";
+import { NextSeo } from "next-seo";
 import SEO from "../next-seo.config";
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <>
-      <DefaultSeo {...SEO} />
+      <NextSeo noindex={false} nofollow={true} {...SEO} />
       <UserContextProvider>
         <AlertContextProvider>
           <LinkContextProvider>
