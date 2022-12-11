@@ -1,6 +1,6 @@
-import UserContext from "../../context/UserContext";
-import { useContext, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useContext, useEffect } from "react";
+import UserContext from "../../context/UserContext";
 
 export default function LoginButton() {
   const { data, status } = useSession();
